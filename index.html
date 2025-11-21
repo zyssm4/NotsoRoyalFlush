@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Rush - Card Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="main-content">
+            <header>
+                <h1>Royal Rush</h1>
+                <p class="subtitle">Build the perfect Royal Flush!</p>
+            </header>
+
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Draws:</span>
+                    <span id="draws">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Deck Size:</span>
+                    <span id="deckSize">52</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Combo:</span>
+                    <span id="combo" class="combo-display">-</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Money:</span>
+                    <span id="money">$0</span>
+                </div>
+            </div>
+
+            <div class="game-area">
+                <div class="target-cards">
+                    <h2>Target: Royal Flush ♥</h2>
+                    <div class="royal-flush-display" id="royalFlushDisplay">
+                        <div class="card-slot empty" data-card="10">10</div>
+                        <div class="card-slot empty" data-card="J">J</div>
+                        <div class="card-slot empty" data-card="Q">Q</div>
+                        <div class="card-slot empty" data-card="K">K</div>
+                        <div class="card-slot empty" data-card="A">A</div>
+                    </div>
+                </div>
+
+                <div class="draw-area">
+                    <button id="shuffleButton" class="btn btn-primary">Shuffle Deck</button>
+                    <div id="cardSelectionArea" class="card-selection-area"></div>
+                    <div class="draw-result" id="drawResult"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="upgrades-sidebar">
+            <h2>Upgrades</h2>
+            <div class="upgrades-list" id="upgradesGrid">
+                <!-- Upgrades will be dynamically generated -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="winModal">
+        <div class="modal-content">
+            <!-- Win animation will be inserted here -->
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

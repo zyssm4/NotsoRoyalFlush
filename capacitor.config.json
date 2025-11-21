@@ -1,0 +1,19 @@
+{
+  "appId": "com.royalrush.game",
+  "appName": "Royal Rush",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "buildOptions": {
+      "keystorePath": "",
+      "keystoreAlias": ""
+    }
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "scheme": "Royal Rush"
+  }
+}
