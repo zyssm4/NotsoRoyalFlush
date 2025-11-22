@@ -1146,6 +1146,70 @@ header h1 {
     font-weight: bold;
 }
 
+.prestige-bonuses {
+    margin-top: 8px;
+    font-size: 0.7em;
+    text-align: left;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.prestige-bonus-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(106, 0, 192, 0.3);
+}
+
+.prestige-bonus-item:last-child {
+    border-bottom: none;
+}
+
+.prestige-bonus-item .bonus-label {
+    color: #a0a0a0;
+}
+
+.prestige-bonus-item .bonus-value {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.prestige-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: linear-gradient(180deg, #4a00a0 0%, #2a0060 100%);
+    border: 2px solid #6a00c0;
+    color: #ffd700;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.9em;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.9);
+    transition: none;
+}
+
+.prestige-btn:hover {
+    background: linear-gradient(180deg, #6a00c0 0%, #4a00a0 100%);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.9);
+    transform: translate(1px, 1px);
+}
+
+.prestige-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+    border-color: #2a2a2a;
+    color: #4a4a4a;
+}
+
+.prestige-btn .prestige-points-preview {
+    display: block;
+    font-size: 0.8em;
+    color: #00ff00;
+    margin-top: 3px;
+}
+
 /* Daily Bonus Button */
 .daily-bonus-btn {
     width: 100%;

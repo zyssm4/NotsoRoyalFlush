@@ -609,6 +609,16 @@ function initGame() {
     // Event listeners
     document.getElementById('shuffleButton').addEventListener('click', startShuffle);
 
+    // Sidebar prestige button
+    const sidebarPrestigeBtn = document.getElementById('sidebarPrestigeBtn');
+    if (sidebarPrestigeBtn) {
+        sidebarPrestigeBtn.addEventListener('click', () => {
+            if (canPrestige() && confirm(`Prestige now for ${getPrestigePoints()} points?\nThis will reset your progress but give permanent bonuses.`)) {
+                prestige();
+            }
+        });
+    }
+
     // Auto-save every 30 seconds
     setInterval(saveGame, 30000);
 
@@ -1071,6 +1081,59 @@ function updateUI() {
     const prestigeElement = document.getElementById('prestigeLevel');
     if (prestigeElement) {
         prestigeElement.textContent = gameState.prestigeLevel;
+    }
+
+    // Update prestige bonuses display
+    updatePrestigeBonuses();
+
+    // Update sidebar prestige button
+    updateSidebarPrestigeButton();
+}
+
+function updatePrestigeBonuses() {
+    const bonusesElement = document.getElementById('prestigeBonuses');
+    if (!bonusesElement) return;
+
+    if (gameState.prestigeLevel === 0) {
+        bonusesElement.innerHTML = '<div style="color: #666; text-align: center; font-style: italic;">No bonuses yet</div>';
+        return;
+    }
+
+    const startingMoney = gameState.prestigeLevel * 25;
+    const costDiscount = gameState.prestigeLevel * 5;
+    const multiplierBonus = (gameState.prestigeLevel * 0.1).toFixed(1);
+    const luckBonus = (gameState.prestigeLevel * 2);
+
+    bonusesElement.innerHTML = `
+        <div class="prestige-bonus-item">
+            <span class="bonus-label">Start $</span>
+            <span class="bonus-value">+$${startingMoney}</span>
+        </div>
+        <div class="prestige-bonus-item">
+            <span class="bonus-label">Cost</span>
+            <span class="bonus-value">-${costDiscount}%</span>
+        </div>
+        <div class="prestige-bonus-item">
+            <span class="bonus-label">Combo</span>
+            <span class="bonus-value">+${multiplierBonus}x</span>
+        </div>
+        <div class="prestige-bonus-item">
+            <span class="bonus-label">Luck</span>
+            <span class="bonus-value">+${luckBonus}%</span>
+        </div>
+    `;
+}
+
+function updateSidebarPrestigeButton() {
+    const btn = document.getElementById('sidebarPrestigeBtn');
+    if (!btn) return;
+
+    if (canPrestige()) {
+        btn.style.display = 'block';
+        const points = getPrestigePoints();
+        btn.innerHTML = `PRESTIGE<span class="prestige-points-preview">+${points} points</span>`;
+    } else {
+        btn.style.display = 'none';
     }
 }
 

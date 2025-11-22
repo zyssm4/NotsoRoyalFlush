@@ -1,34 +1,110 @@
-<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-  <!-- Tileable 8-bit gritty background texture -->
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tileable casino-style background texture -->
   <defs>
+    <!-- Noise filter for grittiness -->
     <filter id="noise">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" seed="2"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" seed="15"/>
       <feColorMatrix type="saturate" values="0"/>
     </filter>
+
+    <!-- Diamond pattern for felt texture -->
+    <pattern id="feltPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="#0a0a0a"/>
+      <polygon points="10,0 20,10 10,20 0,10" fill="#0f0f0f" opacity="0.5"/>
+    </pattern>
   </defs>
 
-  <!-- Base dark gradient -->
-  <rect width="100" height="100" fill="#1a2332"/>
+  <!-- Base dark background -->
+  <rect width="100" height="100" fill="#0a0808"/>
 
-  <!-- Pixel pattern -->
-  <g opacity="0.15">
-    <rect x="0" y="0" width="4" height="4" fill="#0a0a0a"/>
-    <rect x="8" y="4" width="4" height="4" fill="#0a0a0a"/>
-    <rect x="4" y="8" width="4" height="4" fill="#0a0a0a"/>
-    <rect x="12" y="12" width="4" height="4" fill="#0a0a0a"/>
-    <rect x="16" y="0" width="4" height="4" fill="#0a0a0a"/>
+  <!-- Felt texture -->
+  <rect width="100" height="100" fill="url(#feltPattern)"/>
+
+  <!-- Subtle radial gradient for depth -->
+  <radialGradient id="depth">
+    <stop offset="0%" stop-color="#1a0a0a"/>
+    <stop offset="100%" stop-color="#0a0a0a"/>
+  </radialGradient>
+  <rect width="100" height="100" fill="url(#depth)" opacity="0.3"/>
+
+  <!-- Pixel dither pattern -->
+  <g opacity="0.2">
+    <rect x="2" y="2" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="10" y="6" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="22" y="2" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="6" y="14" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="18" y="18" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="42" y="6" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="34" y="14" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="50" y="2" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="58" y="10" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="66" y="2" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="74" y="6" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="82" y="14" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="90" y="2" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="98" y="10" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="2" y="26" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="14" y="30" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="26" y="26" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="38" y="34" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="46" y="22" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="54" y="30" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="62" y="26" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="70" y="34" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="78" y="22" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="86" y="30" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="94" y="26" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="6" y="42" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="18" y="46" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="30" y="42" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="42" y="50" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="50" y="38" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="58" y="46" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="66" y="42" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="74" y="50" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="82" y="38" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="90" y="46" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="2" y="58" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="14" y="62" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="26" y="58" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="38" y="66" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="46" y="54" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="54" y="62" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="62" y="58" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="70" y="66" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="78" y="54" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="86" y="62" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="94" y="58" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="6" y="74" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="18" y="78" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="30" y="74" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="42" y="82" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="50" y="70" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="58" y="78" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="66" y="74" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="74" y="82" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="82" y="70" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="90" y="78" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="2" y="90" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="14" y="94" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="26" y="90" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="38" y="98" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="46" y="86" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="54" y="94" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="62" y="90" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="70" y="98" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="78" y="86" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="86" y="94" width="2" height="2" fill="#1a1a1a"/>
+    <rect x="94" y="90" width="2" height="2" fill="#1a1a1a"/>
   </g>
 
-  <!-- Noise texture -->
-  <rect width="100" height="100" filter="url(#noise)" opacity="0.25"/>
+  <!-- Noise texture overlay -->
+  <rect width="100" height="100" filter="url(#noise)" opacity="0.15"/>
 
-  <!-- Subtle grid lines -->
-  <g stroke="#000" stroke-width="0.5" opacity="0.1">
-    <line x1="0" y1="25" x2="100" y2="25"/>
-    <line x1="0" y1="50" x2="100" y2="50"/>
-    <line x1="0" y1="75" x2="100" y2="75"/>
-    <line x1="25" y1="0" x2="25" y2="100"/>
-    <line x1="50" y1="0" x2="50" y2="100"/>
-    <line x1="75" y1="0" x2="75" y2="100"/>
-  </g>
+  <!-- Scanline effect -->
+  <pattern id="scanlines" width="2" height="4" patternUnits="userSpaceOnUse">
+    <rect width="2" height="2" fill="#000" opacity="0.1"/>
+  </pattern>
+  <rect width="100" height="100" fill="url(#scanlines)"/>
 </svg>
