@@ -70,8 +70,8 @@ script = ExtResource("1_main")
 environment = SubResource("Environment_1")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 6, 7)
-fov = 45.0
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 3.5, 5)
+fov = 60.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 5, 10, 5)
@@ -226,22 +226,18 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Deck: 52"
 
-[node name="ShuffleButton" type="Button" parent="GameUI/MainPanel"]
+[node name="ShuffleButton" type="Button" parent="GameUI/MainPanel/MarginContainer/VBox"]
 layout_mode = 2
-offset_left = 540.0
-offset_top = 100.0
-offset_right = 740.0
-offset_bottom = 140.0
+custom_minimum_size = Vector2(200, 40)
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 0.84, 0, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 20
 text = "♦ SHUFFLE ♦"
 
-[node name="ResultLabel" type="Label" parent="GameUI/MainPanel"]
+[node name="ResultLabel" type="Label" parent="GameUI/MainPanel/MarginContainer/VBox"]
 layout_mode = 2
-offset_top = 145.0
-offset_right = 1280.0
-offset_bottom = 170.0
+custom_minimum_size = Vector2(0, 25)
 theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 
