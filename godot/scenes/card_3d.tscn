@@ -1,9 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://card3dscene"]
+[gd_scene load_steps=8 format=3 uid="uid://card3dscene"]
 
 [ext_resource type="Script" path="res://scripts/card_3d.gd" id="1_card3d"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_card"]
-size = Vector3(0.8, 1.2, 0.05)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_card_back"]
 albedo_color = Color(0.15, 0.05, 0.2, 1)
@@ -13,26 +10,69 @@ rim_enabled = true
 rim = 0.3
 rim_tint = 0.5
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_card_edge"]
-albedo_color = Color(0.95, 0.95, 0.9, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_card_white"]
+albedo_color = Color(0.98, 0.98, 0.95, 1)
+roughness = 0.4
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_card"]
 size = Vector3(0.8, 1.2, 0.1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_border"]
-size = Vector3(0.82, 1.22, 0.04)
+[sub_resource type="CylinderMesh" id="CylinderMesh_corner"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.05
+radial_segments = 12
 
 [node name="Card3D" type="Node3D"]
 script = ExtResource("1_card3d")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_card")
+[node name="CardBody" type="Node3D" parent="."]
+
+[node name="MainBody" type="CSGBox3D" parent="CardBody"]
+size = Vector3(0.68, 1.08, 0.05)
+material = SubResource("StandardMaterial3D_card_back")
+
+[node name="TopStrip" type="CSGBox3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.51, 0)
+size = Vector3(0.68, 0.06, 0.05)
+material = SubResource("StandardMaterial3D_card_back")
+
+[node name="BottomStrip" type="CSGBox3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.51, 0)
+size = Vector3(0.68, 0.06, 0.05)
+material = SubResource("StandardMaterial3D_card_back")
+
+[node name="LeftStrip" type="CSGBox3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 0, 0)
+size = Vector3(0.06, 1.08, 0.05)
+material = SubResource("StandardMaterial3D_card_back")
+
+[node name="RightStrip" type="CSGBox3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.37, 0, 0)
+size = Vector3(0.06, 1.08, 0.05)
+material = SubResource("StandardMaterial3D_card_back")
+
+[node name="CornerTL" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.34, 0.54, 0)
+mesh = SubResource("CylinderMesh_corner")
 surface_material_override/0 = SubResource("StandardMaterial3D_card_back")
 
-[node name="Border" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("BoxMesh_border")
-surface_material_override/0 = SubResource("StandardMaterial3D_card_edge")
+[node name="CornerTR" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.34, 0.54, 0)
+mesh = SubResource("CylinderMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_card_back")
+
+[node name="CornerBL" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.34, -0.54, 0)
+mesh = SubResource("CylinderMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_card_back")
+
+[node name="CornerBR" type="MeshInstance3D" parent="CardBody"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.34, -0.54, 0)
+mesh = SubResource("CylinderMesh_corner")
+surface_material_override/0 = SubResource("StandardMaterial3D_card_back")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 
 [node name="FrontLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
