@@ -1,10 +1,10 @@
 # Royal Rush 3D - Godot Port
 
-A full 3D port of Royal Rush built with Godot 4.2+.
+A full 3D port of Royal Rush built with Godot 4.3+.
 
 ## Requirements
 
-- Godot 4.2 or later
+- Godot 4.3 or later
 - Forward+ renderer support
 
 ## Project Structure
