@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#1a1a2e"/>
+
+  <!-- Card shape -->
+  <rect x="24" y="16" width="80" height="96" rx="8" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+
+  <!-- Heart symbol -->
+  <path d="M64 45 C54 25, 29 35, 39 55 C44 65, 64 85, 64 85 C64 85, 84 65, 89 55 C99 35, 74 25, 64 45"
+        fill="#e63946"/>
+
+  <!-- Crown on top -->
+  <path d="M44 20 L54 30 L64 20 L74 30 L84 20 L80 35 L48 35 Z"
+        fill="#ffd700"/>
+
+  <!-- A text -->
+  <text x="32" y="45" font-family="serif" font-size="16" font-weight="bold" fill="#e63946">A</text>
+  <text x="88" y="100" font-family="serif" font-size="16" font-weight="bold" fill="#e63946" transform="rotate(180 92 92)">A</text>
+</svg>
