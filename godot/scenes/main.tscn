@@ -99,13 +99,68 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0.5, -3.5)
 
 [node name="Dog3D" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 4)
 visible = false
 script = ExtResource("2_dog")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Dog3D"]
-mesh = SubResource("BoxMesh_dog")
-surface_material_override/0 = SubResource("StandardMaterial3D_dog")
+[node name="Body" type="CSGBox3D" parent="Dog3D"]
+size = Vector3(0.3, 0.25, 0.6)
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="Head" type="CSGSphere3D" parent="Dog3D/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0.35)
+radius = 0.12
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="Snout" type="CSGBox3D" parent="Dog3D/Body/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.02, 0.1)
+size = Vector3(0.08, 0.06, 0.1)
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="Nose" type="CSGSphere3D" parent="Dog3D/Body/Head/Snout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0.05)
+radius = 0.02
+material = SubResource("StandardMaterial3D_chip_red")
+
+[node name="EarLeft" type="CSGBox3D" parent="Dog3D/Body/Head"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0.08, 0.05, -0.02)
+size = Vector3(0.04, 0.12, 0.06)
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="EarRight" type="CSGBox3D" parent="Dog3D/Body/Head"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, -0.08, 0.05, -0.02)
+size = Vector3(0.04, 0.12, 0.06)
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="FrontLeftLeg" type="CSGCylinder3D" parent="Dog3D/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, -0.15, 0.2)
+radius = 0.03
+height = 0.2
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="FrontRightLeg" type="CSGCylinder3D" parent="Dog3D/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, -0.15, 0.2)
+radius = 0.03
+height = 0.2
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="BackLeftLeg" type="CSGCylinder3D" parent="Dog3D/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, -0.15, -0.2)
+radius = 0.03
+height = 0.2
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="BackRightLeg" type="CSGCylinder3D" parent="Dog3D/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, -0.15, -0.2)
+radius = 0.03
+height = 0.2
+material = SubResource("StandardMaterial3D_dog")
+
+[node name="Tail" type="CSGCylinder3D" parent="Dog3D/Body"]
+transform = Transform3D(1, 0, 0, 0, 0.5, -0.866025, 0, 0.866025, 0.5, 0, 0.1, -0.35)
+radius = 0.02
+height = 0.25
+material = SubResource("StandardMaterial3D_dog")
 
 [node name="Area3D" type="Area3D" parent="Dog3D"]
 
