@@ -1,22 +1,38 @@
-[gd_scene load_steps=5 format=3 uid="uid://card3dscene"]
+[gd_scene load_steps=7 format=3 uid="uid://card3dscene"]
 
 [ext_resource type="Script" path="res://scripts/card_3d.gd" id="1_card3d"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_card"]
 size = Vector3(0.8, 1.2, 0.05)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_card"]
-albedo_color = Color(0.1, 0.1, 0.3, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_card_back"]
+albedo_color = Color(0.15, 0.05, 0.2, 1)
+metallic = 0.2
+roughness = 0.3
+rim_enabled = true
+rim = 0.3
+rim_tint = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_card_edge"]
+albedo_color = Color(0.95, 0.95, 0.9, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_card"]
 size = Vector3(0.8, 1.2, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_border"]
+size = Vector3(0.82, 1.22, 0.04)
 
 [node name="Card3D" type="Node3D"]
 script = ExtResource("1_card3d")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_card")
-surface_material_override/0 = SubResource("StandardMaterial3D_card")
+surface_material_override/0 = SubResource("StandardMaterial3D_card_back")
+
+[node name="Border" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_border")
+surface_material_override/0 = SubResource("StandardMaterial3D_card_edge")
 
 [node name="FrontLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
@@ -30,11 +46,43 @@ vertical_alignment = 1
 
 [node name="BackLabel" type="Label3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -0.03)
-pixel_size = 0.005
-text = "?"
-font_size = 96
+pixel_size = 0.004
+modulate = Color(1, 0.84, 0, 1)
+text = "♠ ♥
+ROYAL
+RUSH
+♦ ♣"
+font_size = 48
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="BackPattern1" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.25, 0.4, -0.03)
+pixel_size = 0.003
+modulate = Color(0.4, 0.2, 0.5, 1)
+text = "♦"
+font_size = 32
+
+[node name="BackPattern2" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.25, 0.4, -0.03)
+pixel_size = 0.003
+modulate = Color(0.4, 0.2, 0.5, 1)
+text = "♦"
+font_size = 32
+
+[node name="BackPattern3" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.25, -0.4, -0.03)
+pixel_size = 0.003
+modulate = Color(0.4, 0.2, 0.5, 1)
+text = "♦"
+font_size = 32
+
+[node name="BackPattern4" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.25, -0.4, -0.03)
+pixel_size = 0.003
+modulate = Color(0.4, 0.2, 0.5, 1)
+text = "♦"
+font_size = 32
 
 [node name="Area3D" type="Area3D" parent="."]
 
