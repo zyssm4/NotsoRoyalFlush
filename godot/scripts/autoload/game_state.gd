@@ -12,6 +12,9 @@ signal achievement_unlocked(key: String, achievement: Dictionary)
 signal upgrade_purchased(key: String)
 signal prestige_completed(level: int)
 signal notification_requested(message: String)
+signal secret_discovered(secret: String)
+signal tier_unlocked(tier: int)
+signal perfect_round_achieved()
 
 # Core gameplay
 var draws: int = 0
@@ -19,6 +22,26 @@ var money: int = 50
 var deck_size: int = 52
 var combo: int = 0
 var total_wins: int = 0
+
+# Story mode - Casino Tiers
+var current_tier: int = 1
+var tier_progress: int = 0
+const TIER_NAMES: Array = ["", "Street Corner", "Back Alley", "Underground", "The Velvet Room", "High Stakes", "VIP Lounge", "The Penthouse", "Royal Suite"]
+const TIER_REQUIREMENTS: Array = [0, 0, 5, 15, 30, 50, 100, 200, 500]  # Wins needed
+
+# New mechanics
+var mulligan_available: bool = true
+var peek_uses: int = 0
+var insurance_active: bool = false
+var golden_touch_proc: bool = false
+var perfect_round: bool = true  # No wrong cards this round
+var win_streak: int = 0
+var dog_pets: int = 0
+
+# Secrets
+var secrets_discovered: Array = []
+var konami_progress: int = 0
+var secret_mode_active: bool = false
 
 # Royal flush tracking
 var royal_flush: Dictionary = {
@@ -72,7 +95,20 @@ var achievements: Dictionary = {
 	"daily_streak7": {"name": "Dedicated", "description": "Claim daily bonus 7 days in a row", "unlocked": false, "icon": "calendar"},
 	"dog_owner": {"name": "Good Boy", "description": "Get the dog companion", "unlocked": false, "icon": "dog"},
 	"speedrun": {"name": "Speed Demon", "description": "Win in under 20 draws", "unlocked": false, "icon": "lightning"},
-	"collector": {"name": "Collector", "description": "Collect 100 cards total", "unlocked": false, "icon": "book"}
+	"collector": {"name": "Collector", "description": "Collect 100 cards total", "unlocked": false, "icon": "book"},
+	# New achievements
+	"perfect_round": {"name": "Flawless", "description": "Win without any wrong cards", "unlocked": false, "icon": "diamond"},
+	"millionaire": {"name": "Millionaire", "description": "Accumulate $1,000,000 lifetime", "unlocked": false, "icon": "crown"},
+	"win_streak5": {"name": "Hot Streak", "description": "Win 5 rounds in a row", "unlocked": false, "icon": "fire"},
+	"win_streak10": {"name": "Unstoppable", "description": "Win 10 rounds in a row", "unlocked": false, "icon": "meteor"},
+	"tier_max": {"name": "Royal Suite", "description": "Reach the highest casino tier", "unlocked": false, "icon": "castle"},
+	"minimalist": {"name": "Minimalist", "description": "Win with no upgrades purchased", "unlocked": false, "icon": "leaf"},
+	"risk_taker": {"name": "Risk Taker", "description": "Win with deck size under 20", "unlocked": false, "icon": "dice"},
+	"golden_100": {"name": "Midas Touch", "description": "Trigger Golden Touch 100 times", "unlocked": false, "icon": "gold"},
+	# Secret achievements
+	"secret_dog100": {"name": "Best Friend", "description": "Pet the dog 100 times", "unlocked": false, "icon": "heart", "secret": true},
+	"secret_konami": {"name": "Old School", "description": "Enter the classic code", "unlocked": false, "icon": "gamepad", "secret": true},
+	"secret_patience": {"name": "Patience", "description": "Wait 10 minutes without playing", "unlocked": false, "icon": "clock", "secret": true}
 }
 
 # Upgrades
@@ -132,6 +168,55 @@ var upgrades: Dictionary = {
 		"max_level": 1,
 		"base_cost": 500,
 		"effect": 1
+	},
+	# New upgrades
+	"peek": {
+		"name": "X-Ray Vision",
+		"description": "Peek at cards before choosing (+1 use/level)",
+		"level": 0,
+		"max_level": 5,
+		"base_cost": 100,
+		"effect": 1
+	},
+	"mulligan": {
+		"name": "Second Chance",
+		"description": "Reshuffle once per round",
+		"level": 0,
+		"max_level": 1,
+		"base_cost": 200,
+		"effect": 1
+	},
+	"golden_touch": {
+		"name": "Golden Touch",
+		"description": "5% chance per level for 2x money",
+		"level": 0,
+		"max_level": 10,
+		"base_cost": 50,
+		"effect": 0.05
+	},
+	"insurance": {
+		"name": "Insurance",
+		"description": "Keep one card on wrong pick",
+		"level": 0,
+		"max_level": 1,
+		"base_cost": 300,
+		"effect": 1
+	},
+	"card_counter": {
+		"name": "Card Counter",
+		"description": "See remaining hearts in deck",
+		"level": 0,
+		"max_level": 1,
+		"base_cost": 150,
+		"effect": 1
+	},
+	"vip_bonus": {
+		"name": "VIP Status",
+		"description": "+10% money per casino tier",
+		"level": 0,
+		"max_level": 5,
+		"base_cost": 75,
+		"effect": 0.1
 	}
 }
 
@@ -308,9 +393,16 @@ func check_card_result(card: Dictionary) -> Dictionary:
 		var prestige_multiplier = prestige_level * 0.1
 		var total_multiplier = base_multiplier + bonus_multiplier + prestige_multiplier
 
-		# Calculate money
+		# Calculate money with new bonuses
 		var base_money = 10 + (upgrades["money_boost"]["level"] * upgrades["money_boost"]["effect"])
-		var money_earned = int(base_money * total_multiplier)
+		var tier_bonus = get_tier_bonus()
+		var money_earned = int(base_money * total_multiplier * (1 + tier_bonus))
+
+		# Golden Touch check (2x money)
+		var golden_triggered = check_golden_touch()
+		if golden_triggered:
+			money_earned *= 2
+			result["golden_touch"] = true
 
 		var old_money = money
 		money += money_earned
@@ -322,7 +414,10 @@ func check_card_result(card: Dictionary) -> Dictionary:
 		emit_signal("card_collected", card["rank"])
 
 		result["success"] = true
-		result["message"] = "%s%s found! %.1fx COMBO! +$%d" % [card["rank"], SUIT_SYMBOLS["hearts"], total_multiplier, money_earned]
+		var msg = "%s%s found! %.1fx COMBO! +$%d" % [card["rank"], SUIT_SYMBOLS["hearts"], total_multiplier, money_earned]
+		if golden_triggered:
+			msg += " ★GOLDEN★"
+		result["message"] = msg
 		result["money_earned"] = money_earned
 		result["multiplier"] = total_multiplier
 
@@ -331,25 +426,66 @@ func check_card_result(card: Dictionary) -> Dictionary:
 			total_wins += 1
 			stats["total_wins"] += 1
 			stats["games_played"] += 1
+			win_streak += 1
 
 			if draws <= 20:
 				unlock_achievement("speedrun")
+
+			# Check for perfect round
+			if perfect_round:
+				unlock_achievement("perfect_round")
+				emit_signal("perfect_round_achieved")
+				result["perfect"] = true
+
+			# Check for minimalist achievement
+			var has_upgrades = false
+			for upgrade in upgrades.values():
+				if upgrade["level"] > 0:
+					has_upgrades = true
+					break
+			if not has_upgrades:
+				unlock_achievement("minimalist")
+
+			# Check tier progression
+			check_tier_progress()
 
 			emit_signal("win_achieved")
 
 		check_achievements()
 	else:
-		# Wrong card
-		combo = 0
-		stats["wrong_cards"] += 1
-		stats["current_streak"] = 0
+		# Wrong card - check for insurance
+		if use_insurance():
+			# Insurance saves one collected card
+			var saved_card = ""
+			for i in range(ROYAL_CARDS.size() - 1, -1, -1):
+				if royal_flush[ROYAL_CARDS[i]]["found"]:
+					saved_card = ROYAL_CARDS[i]
+					break
 
-		reset_collected_cards()
-		emit_signal("combo_changed", 0)
-		emit_signal("card_reset")
+			# Reset all except the saved one
+			for c in ROYAL_CARDS:
+				if c != saved_card:
+					royal_flush[c]["found"] = false
+					royal_flush[c]["suit"] = null
 
-		var card_name = "%s%s" % [card["rank"], SUIT_SYMBOLS[card["suit"]]]
-		result["message"] = "Wrong card (%s)! All progress lost!" % card_name
+			combo = 1 if saved_card != "" else 0
+			var card_name = "%s%s" % [card["rank"], SUIT_SYMBOLS[card["suit"]]]
+			result["message"] = "Wrong card (%s)! Insurance saved %s!" % [card_name, saved_card]
+			result["insurance_used"] = true
+		else:
+			# Full reset
+			combo = 0
+			stats["wrong_cards"] += 1
+			stats["current_streak"] = 0
+			win_streak = 0
+			perfect_round = false
+
+			reset_collected_cards()
+			emit_signal("combo_changed", 0)
+			emit_signal("card_reset")
+
+			var card_name = "%s%s" % [card["rank"], SUIT_SYMBOLS[card["suit"]]]
+			result["message"] = "Wrong card (%s)! All progress lost!" % card_name
 
 	save_game()
 	return result
@@ -437,11 +573,129 @@ func check_achievements() -> void:
 	if stats["cards_collected"] >= 100:
 		unlock_achievement("collector")
 
+	# New achievements
+	if lifetime_money >= 1000000:
+		unlock_achievement("millionaire")
+	if win_streak >= 5:
+		unlock_achievement("win_streak5")
+	if win_streak >= 10:
+		unlock_achievement("win_streak10")
+	if current_tier >= 8:
+		unlock_achievement("tier_max")
+	if deck_size < 20 and stats["total_wins"] > 0:
+		unlock_achievement("risk_taker")
+	if dog_pets >= 100:
+		unlock_achievement("secret_dog100")
+
 	# Check max upgrade
 	for upgrade in upgrades.values():
 		if upgrade["level"] >= upgrade["max_level"]:
 			unlock_achievement("max_upgrade")
 			break
+
+# ============================================
+# TIER PROGRESSION SYSTEM
+# ============================================
+func check_tier_progress() -> void:
+	var new_tier = current_tier
+	for i in range(TIER_REQUIREMENTS.size() - 1, 0, -1):
+		if stats["total_wins"] >= TIER_REQUIREMENTS[i]:
+			new_tier = i
+			break
+
+	if new_tier > current_tier:
+		current_tier = new_tier
+		emit_signal("tier_unlocked", current_tier)
+		emit_signal("notification_requested", "Welcome to %s!" % TIER_NAMES[current_tier])
+		save_game()
+
+func get_tier_name() -> String:
+	if current_tier < TIER_NAMES.size():
+		return TIER_NAMES[current_tier]
+	return "Unknown"
+
+func get_tier_bonus() -> float:
+	return current_tier * upgrades["vip_bonus"]["level"] * upgrades["vip_bonus"]["effect"]
+
+# ============================================
+# NEW MECHANICS
+# ============================================
+func use_peek() -> bool:
+	if peek_uses > 0:
+		peek_uses -= 1
+		return true
+	return false
+
+func reset_peek_uses() -> void:
+	peek_uses = upgrades["peek"]["level"]
+
+func use_mulligan() -> bool:
+	if mulligan_available and upgrades["mulligan"]["level"] > 0:
+		mulligan_available = false
+		return true
+	return false
+
+func reset_mulligan() -> void:
+	mulligan_available = upgrades["mulligan"]["level"] > 0
+
+func check_golden_touch() -> bool:
+	var chance = upgrades["golden_touch"]["level"] * upgrades["golden_touch"]["effect"]
+	golden_touch_proc = randf() < chance
+	if golden_touch_proc:
+		stats["golden_touch_procs"] = stats.get("golden_touch_procs", 0) + 1
+		if stats["golden_touch_procs"] >= 100:
+			unlock_achievement("golden_100")
+	return golden_touch_proc
+
+func use_insurance() -> bool:
+	if insurance_active and upgrades["insurance"]["level"] > 0:
+		insurance_active = false
+		return true
+	return false
+
+func reset_insurance() -> void:
+	insurance_active = upgrades["insurance"]["level"] > 0
+
+func pet_dog() -> void:
+	dog_pets += 1
+	if dog_pets >= 100:
+		unlock_achievement("secret_dog100")
+	save_game()
+
+# ============================================
+# SECRET SYSTEM
+# ============================================
+func check_konami_input(key: String) -> bool:
+	const KONAMI: Array = ["up", "up", "down", "down", "left", "right", "left", "right", "b", "a"]
+
+	if key == KONAMI[konami_progress]:
+		konami_progress += 1
+		if konami_progress >= KONAMI.size():
+			konami_progress = 0
+			activate_secret("konami")
+			return true
+	else:
+		konami_progress = 0
+	return false
+
+func activate_secret(secret_name: String) -> void:
+	if secret_name in secrets_discovered:
+		return
+
+	secrets_discovered.append(secret_name)
+
+	match secret_name:
+		"konami":
+			money += 1000
+			unlock_achievement("secret_konami")
+			emit_signal("notification_requested", "SECRET: +$1000!")
+		"patience":
+			money += 500
+			unlock_achievement("secret_patience")
+			emit_signal("notification_requested", "SECRET: Patience rewarded! +$500")
+
+	emit_signal("secret_discovered", secret_name)
+	save_game()
 
 # ============================================
 # PRESTIGE SYSTEM
@@ -528,7 +782,11 @@ func reset_for_new_round() -> void:
 	combo = 0
 	is_shuffling = false
 	cards_laid_out = false
+	perfect_round = true
 	reset_collected_cards()
+	reset_peek_uses()
+	reset_mulligan()
+	reset_insurance()
 	emit_signal("card_reset")
 	save_game()
 
