@@ -1,0 +1,42 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Royal Rush 3D - Placeholder"
+  },
+  "scene": 0,
+  "scenes": [{"nodes": [0]}],
+  "nodes": [
+    {
+      "name": "Dog",
+      "mesh": 0,
+      "children": [1]
+    },
+    {
+      "name": "Armature",
+      "skin": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "DogMesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "indices": 5
+        }
+      ]
+    }
+  ],
+  "skins": [],
+  "animations": [],
+  "accessors": [],
+  "bufferViews": [],
+  "buffers": [],
+  "_comment": "PLACEHOLDER - Replace with rigged dog model. Needs: Walk, Idle, Happy animations. See MODELS_GUIDE.md"
+}
